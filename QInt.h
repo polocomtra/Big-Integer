@@ -9,11 +9,30 @@ using namespace std;
 class QInt
 {
 private:
-	char bitArr[SIZE];
-
+    char bitArr[SIZE];
+    char getBit(int pos);
+    void setBit(int pos, char val);
+    void fromBin(string str);
+    void fromDec(string str);
+    void fromHex(string str);
+    void div2(string& str);
 public:
-	QInt();
-	~QInt();
-
+    
+    QInt();
+    ~QInt();
+    QInt(string str, string base);
+    QInt(const QInt&ot);
+    QInt operator+(const QInt& ot);
+    QInt operator-(const QInt& ot);
+    QInt operator*(const QInt& ot);
+    QInt operator/(const QInt& ot);
+    QInt operator+();
+    QInt operator-();
+    QInt twoComplement();
+    QInt abs();
+    
+    void ror();
+    void rol();
+    string toString();
 };
 
