@@ -392,5 +392,4 @@ string QInt::toBin() {
     result = removeRedundant(result);
 
     return result;
-
 }
