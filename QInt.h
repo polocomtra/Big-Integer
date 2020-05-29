@@ -16,12 +16,15 @@ private:
     void fromDec(string str);
     void fromHex(string str);
     void div2(string& str);
+
+    string removeRedundant(string result);
+    string add(string a, string b);
 public:
-    
+
     QInt();
     ~QInt();
     QInt(string str, string base);
-    QInt(const QInt&ot);
+    QInt(const QInt& ot);
     QInt operator+(const QInt& ot);
     QInt operator-(const QInt& ot);
     QInt operator*(const QInt& ot);
@@ -30,9 +33,13 @@ public:
     QInt operator-();
     QInt twoComplement();
     QInt abs();
-    
+
     void ror();
     void rol();
     string toString();
+
+    string toDec();
+    string toHex();
+    string toBin();
 };
 
