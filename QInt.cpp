@@ -394,6 +394,7 @@ string QInt::toBin() {
     return result;
 }
 
+
 string QInt::toString(string b){
 	if(base == "2")
 		return toBin();
@@ -403,4 +404,3 @@ string QInt::toString(string b){
 		return toHex();
 }
 
-	
