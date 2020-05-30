@@ -41,5 +41,6 @@ public:
     string toDec();
     string toHex();
     string toBin();
+    string toString(string base);
 };
 
