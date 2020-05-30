@@ -393,3 +393,14 @@ string QInt::toBin() {
 
     return result;
 }
+
+
+string QInt::toString(string b){
+	if(base == "2")
+		return toBin();
+	else if( base == "10")
+		return toDec();
+	else if( base == "16")
+		return toHex();
+}
+
