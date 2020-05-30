@@ -31,7 +31,7 @@ void Application::solve(string req){
     getline(inStream, p2, ' ');
     
     if (p2 == "2" | p2 == "10" | p2 == "16") {
-        //chuyển p1 -> hệ p2
+        //convert base p1 into base p2
         string p3 = "";
 		
         getline(inStream, p3, ' ');
