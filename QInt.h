@@ -34,6 +34,16 @@ public:
     QInt twoComplement();
     QInt abs();
 
+	//Operator &,|,^,~,>>,<<
+
+	QInt operator&(const QInt& ot) const;
+	QInt operator|(const QInt& ot) const;
+	QInt operator^(const QInt& ot) const;
+	QInt operator~() const;
+
+	QInt operator>>(int num) const;
+	QInt operator<<(int num) const;
+
     void ror();
     void rol();
     string toString();
