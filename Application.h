@@ -14,6 +14,7 @@ private:
     void solve(string request);
     
 public:
+	Application(char* inFilename, char* outFilename);
     Application();
     ~Application();
     
