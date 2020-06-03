@@ -21,6 +21,7 @@ private:
 	string add(string a, string b);
 public:
 
+
 	QInt();
 	~QInt();
 	QInt(string str, string base);
@@ -34,6 +35,9 @@ public:
 	QInt twoComplement();
 	QInt abs();
 
+
+
+
 	//Operator &,|,^,~,>>,<<
 
 	QInt operator&(const QInt& ot) const;
@@ -44,6 +48,7 @@ public:
 	QInt operator>>(int num) const;
 	QInt operator<<(int num) const;
 
+
 	void ror();
 	void rol();
 	string toString();
@@ -52,4 +57,6 @@ public:
 	string toHex();
 	string toBin();
 	string toString(string base);
+
+    
 };

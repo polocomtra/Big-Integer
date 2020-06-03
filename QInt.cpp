@@ -259,6 +259,72 @@ QInt QInt::operator<<(int num) const {
 	return result;
 }
 
+//Operator &,|,^,~
+
+QInt QInt::operator&(const QInt& ot) const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = this->bitArr[i] & ot.bitArr[i];
+	}
+	return result;
+}
+
+QInt QInt::operator|(const QInt& ot) const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = this->bitArr[i] | ot.bitArr[i];
+	}
+	return result;
+}
+
+QInt QInt::operator^(const QInt& ot) const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = this->bitArr[i] ^ ot.bitArr[i];
+	}
+	return result;
+}
+
+QInt QInt::operator~() const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = ~this->bitArr[i];
+	}
+	return result;
+}
+
+//Operator <<,>>
+
+QInt QInt::operator>>(int num) const {
+	QInt result = *this;
+	while (num > 0) {
+		for (int i = SIZE - 1; i >= 1; i--) {
+			result.bitArr[i] = result.bitArr[i] >> 1;
+			if (result.bitArr[i - 1] & 1) {
+				result.bitArr[i] = (1 << 7 | result.bitArr[i]);
+			}
+		}
+		result.bitArr[0] = result.bitArr[0] >> 1;
+		num--;
+	}
+	return result;
+}
+
+QInt QInt::operator<<(int num) const {
+	QInt result = *this;
+	while (num > 0) {
+		for (int i = 0; i < SIZE - 1; i++) {
+			result.bitArr[i] = result.bitArr[i] << 1;
+			if ((result.bitArr[i + 1] >> 7) & 1) {
+				result.bitArr[i] = (1 | result.bitArr[i]);
+			}
+		}
+		result.bitArr[SIZE - 1] = result.bitArr[SIZE - 1] << 1;
+		num--;
+	}
+	return result;
+}
+
 QInt QInt::abs() {
 	if (getBit(0)) {
 		return twoComplement();
