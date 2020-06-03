@@ -183,6 +183,81 @@ QInt QInt::operator/(const QInt& ot) {
     return q0;
 }
 
+//Operator &,|,^,~
+
+QInt QInt::operator&(const QInt& ot) const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = this->bitArr[i] & ot.bitArr[i];
+	}
+	return result;
+}
+
+QInt QInt::operator|(const QInt& ot) const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = this->bitArr[i] | ot.bitArr[i];
+	}
+	return result;
+}
+
+QInt QInt::operator^(const QInt& ot) const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = this->bitArr[i] ^ ot.bitArr[i];
+	}
+	return result;
+}
+
+QInt QInt::operator~() const {
+	QInt result;
+	for (int i = 0; i < SIZE; i++) {
+		result.bitArr[i] = ~this->bitArr[i];
+	}
+	return result;
+}
+
+//Operator <<,>>
+
+QInt QInt::operator>>(int num) const {
+	QInt result = *this;
+    string str = result.toDec();
+	//while (num > 0) {
+	//	for (int i = SIZE - 1; i >= 1; i--) {
+	//		result.bitArr[i] = result.bitArr[i] >> 1;
+	//		if (result.bitArr[i - 1] & 1) {
+	//			result.bitArr[i] = (1 << 7 | result.bitArr[i]);
+	//		}
+	//	}
+	//	result.bitArr[0] = result.bitArr[0] >> 1;
+	//	num--;
+	//}
+    char saved = result.getBit(0);
+
+    for (int i = 127; i >= num; --i) {
+        result.setBit(i, result.getBit(i - num));
+    }
+    for (int i = 0; i < num; i++) {
+        result.setBit(i, 1);
+    }
+	return result; 
+}
+
+QInt QInt::operator<<(int num) const {
+	QInt result = *this;
+	while (num > 0) {
+		for (int i = 0; i < SIZE - 1; i++) {
+			result.bitArr[i] = result.bitArr[i] << 1;
+			if ((result.bitArr[i + 1] >> 7) & 1) {
+				result.bitArr[i] = (1 | result.bitArr[i]);
+			}
+		}
+		result.bitArr[SIZE - 1] = result.bitArr[SIZE - 1] << 1;
+		num--;
+	}
+	return result;
+}
+
 QInt QInt::abs() {
     if (getBit(0)) {
         return twoComplement();
@@ -395,7 +470,7 @@ string QInt::toBin() {
 }
 
 
-string QInt::toString(string b){
+string QInt::toString(string base){
 	if(base == "2")
 		return toBin();
 	else if( base == "10")
