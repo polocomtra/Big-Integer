@@ -8,6 +8,7 @@ QInt::~QInt() {
 }
 
 QInt::QInt(string str, string base) {
+    //Khởi tạo QInt với giá trị là chuỗi str, hệ base
 	if (base == "2") {
 		fromBin(str);
 	}
@@ -26,6 +27,7 @@ QInt::QInt(const QInt& other) {
 }
 
 void QInt::setBit(int pos, char val) {
+    //Thay đổi giá trị bit thứ pos với giá trị val
 	if (val) {
 		bitArr[pos / 8] |= (1 << (7 - pos % 8));
 	}
@@ -35,11 +37,13 @@ void QInt::setBit(int pos, char val) {
 }
 
 char QInt::getBit(int pos) {
+    //Lấy giá trị bit thứ pos
 	return (bitArr[pos / 8] >> (7 - pos % 8)) & 1;
 }
 
 
 void QInt::fromBin(string str) {
+    //Khởi tạo giá trị QInt từ chuỗi str, hệ 2
 	memset(bitArr, 0, SIZE);
 	for (int i = str.size() - 1; i >= 0; --i) {
 		int pos = SIZE * 8 - (str.size() - i);
@@ -48,6 +52,7 @@ void QInt::fromBin(string str) {
 	}
 }
 void QInt::fromDec(string str) {
+    //Khởi tạo giá trị QInt từ chuỗi str, hệ 10
 	memset(bitArr, 0, SIZE);
 	char isNegative = 0;
 	if (str[0] == '-') {
@@ -58,7 +63,7 @@ void QInt::fromDec(string str) {
 	for (int i = SIZE * 8 - 1; i >= 0; --i) {
 		bit = (str[str.size() - 1] - '0') % 2;
 		setBit(i, bit);
-		div2(str);
+		str = div2(str);
 		if (str.empty()) break;;
 	}
 	if (isNegative) {
@@ -66,6 +71,7 @@ void QInt::fromDec(string str) {
 	}
 }
 void QInt::fromHex(string str) {
+    //Khởi tạo giá trị QInt từ chuỗi str, hệ 16
 	memset(bitArr, 0, SIZE);
 	char he;
 	for (int i = str.size() - 1; i >= 0; --i) {
@@ -80,7 +86,8 @@ void QInt::fromHex(string str) {
 	}
 }
 
-void QInt::div2(string& str) {
+string QInt::div2(string str) {
+    //Trả về giá trị chuỗi str(hệ 2) chia 2
 	string result;
 	char remainder = 0;
 	for (int i = 0; i < str.size(); i++) {
@@ -90,10 +97,10 @@ void QInt::div2(string& str) {
 	}
 
 	if (result[0] == '0') result.erase(result.begin());
-	str = result;
+	return result;
 }
-QInt QInt::operator+(const QInt& ot) {
-	//a + b
+QInt QInt::operator+(const QInt& ot) const{
+	//Phép cộng 2 số (*this + ot)
 	QInt b = ot;
 	QInt a = *this;
 	QInt result;
@@ -106,15 +113,8 @@ QInt QInt::operator+(const QInt& ot) {
 	return result;
 }
 
-QInt QInt::operator+() {
-	return *this;
-}
-
-QInt QInt::operator-() {
-	return twoComplement();
-}
-
 QInt QInt::twoComplement() {
+    //Phép bù 2
 	QInt result;
 	for (int i = 0; i < SIZE * 8; ++i) {
 		result.setBit(i, getBit(i) ^ 1);
@@ -125,12 +125,14 @@ QInt QInt::twoComplement() {
 	return result;
 }
 
-QInt QInt::operator-(const QInt& ot) {
+QInt QInt::operator-(const QInt& ot) const{
+    //Phép trừ 2 số (*this - ot)
 	QInt b = ot;
 	return *this + b.twoComplement();
 }
 
-QInt QInt::operator*(const QInt& ot) {
+QInt QInt::operator*(const QInt& ot) const{
+    //Phép nhân 2 số (*this * ot)
 	QInt a;
 	QInt m = *this;
 	QInt q0 = ot;
@@ -153,7 +155,8 @@ QInt QInt::operator*(const QInt& ot) {
 	return q0;
 }
 
-QInt QInt::operator/(const QInt& ot) {
+QInt QInt::operator/(const QInt& ot) const{
+    //Phép chia 2 số (*t)
 	QInt m = ot;
 	QInt a;
 	QInt q0 = *this;
@@ -259,73 +262,8 @@ QInt QInt::operator<<(int num) const {
 	return result;
 }
 
-//Operator &,|,^,~
-
-QInt QInt::operator&(const QInt& ot) const {
-	QInt result;
-	for (int i = 0; i < SIZE; i++) {
-		result.bitArr[i] = this->bitArr[i] & ot.bitArr[i];
-	}
-	return result;
-}
-
-QInt QInt::operator|(const QInt& ot) const {
-	QInt result;
-	for (int i = 0; i < SIZE; i++) {
-		result.bitArr[i] = this->bitArr[i] | ot.bitArr[i];
-	}
-	return result;
-}
-
-QInt QInt::operator^(const QInt& ot) const {
-	QInt result;
-	for (int i = 0; i < SIZE; i++) {
-		result.bitArr[i] = this->bitArr[i] ^ ot.bitArr[i];
-	}
-	return result;
-}
-
-QInt QInt::operator~() const {
-	QInt result;
-	for (int i = 0; i < SIZE; i++) {
-		result.bitArr[i] = ~this->bitArr[i];
-	}
-	return result;
-}
-
-//Operator <<,>>
-
-QInt QInt::operator>>(int num) const {
-	QInt result = *this;
-	while (num > 0) {
-		for (int i = SIZE - 1; i >= 1; i--) {
-			result.bitArr[i] = result.bitArr[i] >> 1;
-			if (result.bitArr[i - 1] & 1) {
-				result.bitArr[i] = (1 << 7 | result.bitArr[i]);
-			}
-		}
-		result.bitArr[0] = result.bitArr[0] >> 1;
-		num--;
-	}
-	return result;
-}
-
-QInt QInt::operator<<(int num) const {
-	QInt result = *this;
-	while (num > 0) {
-		for (int i = 0; i < SIZE - 1; i++) {
-			result.bitArr[i] = result.bitArr[i] << 1;
-			if ((result.bitArr[i + 1] >> 7) & 1) {
-				result.bitArr[i] = (1 | result.bitArr[i]);
-			}
-		}
-		result.bitArr[SIZE - 1] = result.bitArr[SIZE - 1] << 1;
-		num--;
-	}
-	return result;
-}
-
 QInt QInt::abs() {
+    //Tính giá trị tuyệt đối
 	if (getBit(0)) {
 		return twoComplement();
 	}
@@ -333,6 +271,7 @@ QInt QInt::abs() {
 }
 
 void QInt::rol() {
+    //Phép xoay trái
 	int sizeInBits = SIZE * 8;
 	int saved = getBit(0);
 	for (int i = 0; i < sizeInBits - 1; ++i) {
@@ -342,20 +281,13 @@ void QInt::rol() {
 }
 
 void QInt::ror() {
+    //Phép xoay phải
 	int sizeInBits = SIZE * 8;
 	char saved = getBit(sizeInBits - 1);
 	for (int i = sizeInBits - 1; i > 0; --i) {
 		setBit(i, getBit(i - 1));
 	}
 	setBit(0, saved);
-}
-
-string QInt::toString() {
-	string str = "";
-	for (int i = 0; i < SIZE * 8; i++) {
-		str += getBit(i) + '0';
-	}
-	return str;
 }
 
 string QInt::add(string a, string b) {
@@ -538,10 +470,10 @@ string QInt::toBin() {
 
 
 string QInt::toString(string base) {
+    //Trả vê giá trị lưu trữ theo hệ base
 	if (base == "2")
 		return toBin();
-	else if (base == "10")
-		return toDec();
 	else if (base == "16")
-		return toHex();
+    	return toHex();
+    return toDec();
 }

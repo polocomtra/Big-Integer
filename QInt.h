@@ -15,7 +15,7 @@ private:
 	void fromBin(string str);
 	void fromDec(string str);
 	void fromHex(string str);
-	void div2(string& str);
+	string div2(string str);
 
 	string removeRedundant(string result);
 	string add(string a, string b);
@@ -26,17 +26,12 @@ public:
 	~QInt();
 	QInt(string str, string base);
 	QInt(const QInt& ot);
-	QInt operator+(const QInt& ot);
-	QInt operator-(const QInt& ot);
-	QInt operator*(const QInt& ot);
-	QInt operator/(const QInt& ot);
-	QInt operator+();
-	QInt operator-();
+	QInt operator+(const QInt& ot) const;
+	QInt operator-(const QInt& ot) const;
+	QInt operator*(const QInt& ot) const;
+	QInt operator/(const QInt& ot) const;
 	QInt twoComplement();
 	QInt abs();
-
-
-
 
 	//Operator &,|,^,~,>>,<<
 
@@ -51,8 +46,7 @@ public:
 
 	void ror();
 	void rol();
-	string toString();
-
+    
 	string toDec();
 	string toHex();
 	string toBin();

@@ -30,9 +30,6 @@ void Application::writeLine(string line) {
 }
 
 void Application::solve(string req) {
-	if (req == "10 -6529624872154135214755416638567 >> 67") {
-		cout << "";
-	}
 	stringstream inStream(req);
 	string p1 = "";
 	getline(inStream, p1, ' ');
