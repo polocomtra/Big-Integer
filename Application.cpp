@@ -11,7 +11,7 @@ Application::Application(char* inFilename, char* outFilename)
 
 Application::Application() {
 	inFile = fstream("input.txt", ios::in);
-	outFile = fstream("output2.txt", ios::out);
+	outFile = fstream("output.txt", ios::out);
 }
 
 Application::~Application() {

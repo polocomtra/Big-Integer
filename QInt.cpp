@@ -292,6 +292,7 @@ void QInt::ror() {
 
 
 string QInt::mul2(string a, int x) {
+	//Nhân 2 kết quả a và cộng với x
 	string result;
 
 	int redundant = x;
@@ -308,6 +309,7 @@ string QInt::mul2(string a, int x) {
 }
 
 string QInt::toDec() {
+	//Chuyển từ QInt sang hệ 10
 
 	bool isNegative = false;
 	int bit = (bitArr[0] >> 7) & 1;
@@ -326,16 +328,7 @@ string QInt::toDec() {
 
 			int c = (element >> j) & 1;
 
-			/*
-			if (c == 1) {
-				result = add(add(result, result), "1");
-			}
-			else
-				result = add(add(result, result), "0");*/
-
 			result = mul2(result, c);
-
-
 		}
 	}
 
@@ -348,7 +341,7 @@ string QInt::toDec() {
 }
 
 string QInt::removeRedundant(string result) {
-	//eleminate redundant ahead
+	//bỏ tất cả các số 0 thừa k có giá trị phía trước
 	int index = 0;
 	while (result[index] == '0')
 		index++;
@@ -363,6 +356,9 @@ string QInt::removeRedundant(string result) {
 
 
 string QInt::toHex() {
+
+	//Chuyển từ QInt sang hệ 16
+
 
 	int n = SIZE - 1;//index of element in array
 	int pos = 0;//position of point to bit
@@ -410,10 +406,13 @@ string QInt::toHex() {
 
 string QInt::toBin() {
 
+	//Chuyển từ QInt sang hệ 10
+
+
 	string result;
 
-	int n = SIZE - 1;//index of element in array
-	int pos = 0;//position of point to bit
+	int n = SIZE - 1;
+	int pos = 0;
 
 	while (n >= 0) {
 
