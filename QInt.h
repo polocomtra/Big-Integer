@@ -18,7 +18,7 @@ private:
 	string div2(string str);
 
 	string removeRedundant(string result);
-	string add(string a, string b);
+	string mul2(string a, int x);
 public:
 
 

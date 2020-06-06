@@ -290,62 +290,19 @@ void QInt::ror() {
 	setBit(0, saved);
 }
 
-string QInt::add(string a, string b) {
 
+string QInt::mul2(string a, int x) {
 	string result;
 
-	string min, max;
-
-	if (a.length() > b.length()) {
-		max = a;
-		min = b;
-	}
-	else {
-		max = b;
-		min = a;
+	int redundant = x;
+	for (int i = a.length() - 1; i >= 0; i--) {
+		int t = (a[i] - 48) * 2 + redundant;
+		result = (char)(t % 10 + 48) + result;
+		redundant = t / 10;
 	}
 
-	int i = min.length() - 1;
-	int j = max.length() - 1;
-	int anchor = 0;
-	while (i >= 0) {
-		int  t = min[i] - 48 + max[j] - 48 + anchor;
-		if (t >= 10) {
-			t -= 10;
-			anchor = 1;
-		}
-		else
-			anchor = 0;
-
-		char c = 48 + t;
-		result = c + result;
-
-		i--;
-		j--;
-
-	}
-
-	i = max.length() - min.length() - 1;
-	while (i >= 0) {
-		int  t = max[i] - 48 + anchor;
-		if (t >= 10) {
-			t -= 10;
-			anchor = 1;
-		}
-		else
-			anchor = 0;
-
-		char c = 48 + t;
-		result = c + result;
-
-		i--;
-
-
-	}
-
-	if (anchor)
-		result = "1" + result;
-
+	if (redundant > 0)
+		result = '1' + result;
 
 	return result;
 }
@@ -369,11 +326,16 @@ string QInt::toDec() {
 
 			int c = (element >> j) & 1;
 
+			/*
 			if (c == 1) {
 				result = add(add(result, result), "1");
 			}
 			else
-				result = add(add(result, result), "0");
+				result = add(add(result, result), "0");*/
+
+			result = mul2(result, c);
+
+
 		}
 	}
 
@@ -392,6 +354,9 @@ string QInt::removeRedundant(string result) {
 		index++;
 
 	result = result.substr(index);
+
+	if (result.empty())
+		result = "0";
 
 	return result;
 }
@@ -436,6 +401,7 @@ string QInt::toHex() {
 	}
 
 	result = removeRedundant(result);
+	
 
 	return result;
 
