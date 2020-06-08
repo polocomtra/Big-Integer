@@ -314,10 +314,11 @@ void QInt::ror() {
 
 //Nhân 2 kết quả a và cộng với x
 
-string QInt::mul2(string a, int x) {
+string QInt::mul2(string a, char x) {
 	string result;
 
 	int redundant = x;
+
 	for (int i = a.length() - 1; i >= 0; i--) {
 		int t = (a[i] - 48) * 2 + redundant;
 		result = (char)(t % 10 + 48) + result;
@@ -343,16 +344,11 @@ string QInt::toDec() {
 
 	string result = "0";
 
-	for (int i = 0; i < SIZE; i++) {
-		char element = bitArr[i];
 
+	for (int i = 0; i < SIZE * 8; i++) {
+		char c = getBit(i);
 
-		for (int j = 7; j >= 0; j--) {
-
-			int c = (element >> j) & 1;
-
-			result = mul2(result, c);
-		}
+		result = mul2(result, c);
 	}
 
 	if (isNegative)
@@ -389,36 +385,26 @@ string QInt::toHex() {
 	int pos = 0;
 
 	string result;
-
-	int i = 0;
+	
 	int c = 0;
-	while (n >= 0) {
-
-		int bit = (bitArr[n] >> pos) & 1;
+	for (int i = 0, j = 3; i < SIZE * 8; i++, j--) {
+		int bit = getBit(i);
 
 		if (bit == 1)
-			c = (1 << i) | c;
+			c = (1 << j) | c;
 		else
-			c = ~(1 << i) & c;
+			c = ~(1 << j) & c;
 
-		i++;
-		if (i == 4) {
+		if ((i + 1) % 4 == 0) {
 
 			if (c >= 10)
-				result = (char)(c - 10 + 65) + result;
+				result += (char)(c - 10 + 65);
 			else
-				result = (char)(c + 48) + result;
+				result += (char)(c + 48);
 
 			c = 0;
-			i = 0;
+			j = 4;
 		}
-
-		pos++;
-		if (pos > 7) {
-			n--;
-			pos = 0;
-		}
-
 	}
 
 	result = removeRedundant(result);
@@ -441,18 +427,10 @@ string QInt::toBin() {
 	int n = SIZE - 1;
 	int pos = 0;
 
-	while (n >= 0) {
-
-		int bit = (bitArr[n] >> pos) & 1;
+	for (int i = 0; i < SIZE * 8; i++) {
+		int bit = getBit(i);
 		char c = 48 + bit;
-		result = c + result;
-
-		pos++;
-		if (pos > 7) {
-			n--;
-			pos = 0;
-		}
-
+		result += c;
 	}
 
 	result = removeRedundant(result);
