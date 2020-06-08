@@ -379,11 +379,6 @@ string QInt::removeRedundant(string result) {
 
 string QInt::toHex() {
 
-
-
-	int n = SIZE - 1;
-	int pos = 0;
-
 	string result;
 	
 	int c = 0;
@@ -423,9 +418,6 @@ string QInt::toBin() {
 
 
 	string result;
-
-	int n = SIZE - 1;
-	int pos = 0;
 
 	for (int i = 0; i < SIZE * 8; i++) {
 		int bit = getBit(i);
