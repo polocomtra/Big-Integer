@@ -1,14 +1,17 @@
 #include "QInt.h"
 
+//Hàm khởi tạo QInt không tham số
 QInt::QInt() {
 	memset(bitArr, 0, SIZE);
 }
 
+//Hàm hủy QInt
 QInt::~QInt() {
 }
 
+//Khởi tạo QInt với giá trị là chuỗi str, hệ base
 QInt::QInt(string str, string base) {
-    //Khởi tạo QInt với giá trị là chuỗi str, hệ base
+    
 	if (base == "2") {
 		fromBin(str);
 	}
@@ -20,14 +23,16 @@ QInt::QInt(string str, string base) {
 	}
 }
 
+//Hàm sao chép QInt
 QInt::QInt(const QInt& other) {
 	for (int i = SIZE - 1; i >= 0; i--) {
 		bitArr[i] = other.bitArr[i];
 	}
 }
 
+//Thay đổi giá trị bit thứ pos với giá trị 
+
 void QInt::setBit(int pos, char val) {
-    //Thay đổi giá trị bit thứ pos với giá trị val
 	if (val) {
 		bitArr[pos / 8] |= (1 << (7 - pos % 8));
 	}
@@ -36,14 +41,16 @@ void QInt::setBit(int pos, char val) {
 	}
 }
 
+//Lấy giá trị bit thứ pos
+
 char QInt::getBit(int pos) {
-    //Lấy giá trị bit thứ pos
 	return (bitArr[pos / 8] >> (7 - pos % 8)) & 1;
 }
 
 
+//Khởi tạo giá trị QInt từ chuỗi str, hệ 2
+
 void QInt::fromBin(string str) {
-    //Khởi tạo giá trị QInt từ chuỗi str, hệ 2
 	memset(bitArr, 0, SIZE);
 	for (int i = str.size() - 1; i >= 0; --i) {
 		int pos = SIZE * 8 - (str.size() - i);
@@ -51,8 +58,10 @@ void QInt::fromBin(string str) {
 		else setBit(pos, 1);
 	}
 }
+
+//Khởi tạo giá trị QInt từ chuỗi str, hệ 10
+
 void QInt::fromDec(string str) {
-    //Khởi tạo giá trị QInt từ chuỗi str, hệ 10
 	memset(bitArr, 0, SIZE);
 	char isNegative = 0;
 	if (str[0] == '-') {
@@ -70,8 +79,10 @@ void QInt::fromDec(string str) {
 		*this = twoComplement();
 	}
 }
+
+//Khởi tạo giá trị QInt từ chuỗi str, hệ 16
+
 void QInt::fromHex(string str) {
-    //Khởi tạo giá trị QInt từ chuỗi str, hệ 16
 	memset(bitArr, 0, SIZE);
 	char he;
 	for (int i = str.size() - 1; i >= 0; --i) {
@@ -86,8 +97,9 @@ void QInt::fromHex(string str) {
 	}
 }
 
+//Trả về giá trị chuỗi str(hệ 2) chia 2
+
 string QInt::div2(string str) {
-    //Trả về giá trị chuỗi str(hệ 2) chia 2
 	string result;
 	char remainder = 0;
 	for (int i = 0; i < str.size(); i++) {
@@ -99,8 +111,10 @@ string QInt::div2(string str) {
 	if (result[0] == '0') result.erase(result.begin());
 	return result;
 }
+
+//Phép cộng 2 số (*this + ot)
+
 QInt QInt::operator+(const QInt& ot) const{
-	//Phép cộng 2 số (*this + ot)
 	QInt b = ot;
 	QInt a = *this;
 	QInt result;
@@ -113,8 +127,9 @@ QInt QInt::operator+(const QInt& ot) const{
 	return result;
 }
 
+//Phép bù 2
+
 QInt QInt::twoComplement() {
-    //Phép bù 2
 	QInt result;
 	for (int i = 0; i < SIZE * 8; ++i) {
 		result.setBit(i, getBit(i) ^ 1);
@@ -125,14 +140,16 @@ QInt QInt::twoComplement() {
 	return result;
 }
 
+//Phép trừ 2 số (*this - ot)
+
 QInt QInt::operator-(const QInt& ot) const{
-    //Phép trừ 2 số (*this - ot)
 	QInt b = ot;
 	return *this + b.twoComplement();
 }
 
+//Phép nhân 2 số (*this * ot)
+
 QInt QInt::operator*(const QInt& ot) const{
-    //Phép nhân 2 số (*this * ot)
 	QInt a;
 	QInt m = *this;
 	QInt q0 = ot;
@@ -155,8 +172,9 @@ QInt QInt::operator*(const QInt& ot) const{
 	return q0;
 }
 
+//Phép chia 2 số (*t)
+
 QInt QInt::operator/(const QInt& ot) const{
-    //Phép chia 2 số (*t)
 	QInt m = ot;
 	QInt a;
 	QInt q0 = *this;
@@ -262,16 +280,18 @@ QInt QInt::operator<<(int num) const {
 	return result;
 }
 
+//Tính giá trị tuyệt đối
+
 QInt QInt::abs() {
-    //Tính giá trị tuyệt đối
 	if (getBit(0)) {
 		return twoComplement();
 	}
 	return *this;
 }
 
+//Phép xoay trái
+
 void QInt::rol() {
-    //Phép xoay trái
 	int sizeInBits = SIZE * 8;
 	int saved = getBit(0);
 	for (int i = 0; i < sizeInBits - 1; ++i) {
@@ -280,8 +300,9 @@ void QInt::rol() {
 	setBit(sizeInBits - 1, saved);
 }
 
+//Phép xoay phải
+
 void QInt::ror() {
-    //Phép xoay phải
 	int sizeInBits = SIZE * 8;
 	char saved = getBit(sizeInBits - 1);
 	for (int i = sizeInBits - 1; i > 0; --i) {
@@ -291,8 +312,9 @@ void QInt::ror() {
 }
 
 
+//Nhân 2 kết quả a và cộng với x
+
 string QInt::mul2(string a, int x) {
-	//Nhân 2 kết quả a và cộng với x
 	string result;
 
 	int redundant = x;
@@ -308,8 +330,9 @@ string QInt::mul2(string a, int x) {
 	return result;
 }
 
+//Chuyển từ QInt sang hệ 10
+
 string QInt::toDec() {
-	//Chuyển từ QInt sang hệ 10
 
 	bool isNegative = false;
 	int bit = (bitArr[0] >> 7) & 1;
@@ -340,8 +363,9 @@ string QInt::toDec() {
 
 }
 
+//bỏ tất cả các số 0 thừa k có giá trị phía trước
+
 string QInt::removeRedundant(string result) {
-	//bỏ tất cả các số 0 thừa k có giá trị phía trước
 	int index = 0;
 	while (result[index] == '0')
 		index++;
@@ -355,13 +379,14 @@ string QInt::removeRedundant(string result) {
 }
 
 
+//Chuyển từ QInt sang hệ 16
+
 string QInt::toHex() {
 
-	//Chuyển từ QInt sang hệ 16
 
 
-	int n = SIZE - 1;//index of element in array
-	int pos = 0;//position of point to bit
+	int n = SIZE - 1;
+	int pos = 0;
 
 	string result;
 
@@ -404,9 +429,11 @@ string QInt::toHex() {
 }
 
 
+
+//Chuyển từ QInt sang hệ 10
+
 string QInt::toBin() {
 
-	//Chuyển từ QInt sang hệ 10
 
 
 	string result;
@@ -434,8 +461,9 @@ string QInt::toBin() {
 }
 
 
+//Trả vê giá trị lưu trữ theo hệ base
+
 string QInt::toString(string base) {
-    //Trả vê giá trị lưu trữ theo hệ base
 	if (base == "2")
 		return toBin();
 	else if (base == "16")
