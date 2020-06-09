@@ -206,6 +206,7 @@ QInt QInt::operator/(const QInt& ot) const{
 
 //Operator &,|,^,~
 
+//Toán tử & 
 QInt QInt::operator&(const QInt& ot) const {
 	QInt result;
 	for (int i = 0; i < SIZE; i++) {
@@ -214,6 +215,7 @@ QInt QInt::operator&(const QInt& ot) const {
 	return result;
 }
 
+//Toán tử |
 QInt QInt::operator|(const QInt& ot) const {
 	QInt result;
 	for (int i = 0; i < SIZE; i++) {
@@ -222,6 +224,7 @@ QInt QInt::operator|(const QInt& ot) const {
 	return result;
 }
 
+//Toán tử ^
 QInt QInt::operator^(const QInt& ot) const {
 	QInt result;
 	for (int i = 0; i < SIZE; i++) {
@@ -230,6 +233,7 @@ QInt QInt::operator^(const QInt& ot) const {
 	return result;
 }
 
+//Toán tử ~
 QInt QInt::operator~() const {
 	QInt result;
 	for (int i = 0; i < SIZE; i++) {
@@ -239,21 +243,10 @@ QInt QInt::operator~() const {
 }
 
 //Operator <<,>>
+//Phép dịch phải số học
 
 QInt QInt::operator>>(int num) const {
 	QInt result = *this;
-	//while (num > 0) {
-	//	char bit=result.getBit(SIZE * 8 - 1);
-	//	for (int i = SIZE - 1; i >= 1; i--) {
-	//		result.bitArr[i] = result.bitArr[i] >> 1;
-	//		if (result.bitArr[i - 1] & 1) {
-	//			result.bitArr[i] = (1 << 7 | result.bitArr[i]);
-	//		}
-	//	}
-	//	result.bitArr[0] = result.bitArr[0] >> 1;
-	//	result.setBit(SIZE * 8 - 1, bit);
-	//	num--;
-	//}
 	char saved = result.getBit(0);
 
 	for (int i = 127; i >= num; --i) {
@@ -264,6 +257,8 @@ QInt QInt::operator>>(int num) const {
 	}
 	return result;
 }
+
+//Phép dịch trái
 
 QInt QInt::operator<<(int num) const {
 	QInt result = *this;
