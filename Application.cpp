@@ -14,8 +14,7 @@ Application::Application() {
 	outFile = fstream("output.txt", ios::out);
 }
 
-Application::~Application() {
-	inFile.close();
+Application::~Application() {	inFile.close();
 	outFile.close();
 }
 
@@ -105,7 +104,7 @@ void Application::solve(string req) {
 			else if (p3 == "^") result = a ^ b;
 			else if (p3 == "|") result = a | b;
 			else if (p3 == "&") result = a & b;
-
+			cout << p2 << endl << p3 << endl << p4 << endl;
 			writeLine(result.toString(p1));
 
 		}
@@ -115,7 +114,7 @@ void Application::solve(string req) {
 }
 
 void Application::start() {
-
+	//solve("10 -4647 * 4302371896916613314517792614108589");
 	if (!inFile && !outFile) {
 		cout << "File not found" << endl;
 		return;

@@ -25,11 +25,11 @@ public:
 	QInt();
 	~QInt();
 	QInt(string str, string base);
-	QInt(const QInt& ot);
-	QInt operator+(const QInt& ot) const;
-	QInt operator-(const QInt& ot) const;
-	QInt operator*(const QInt& ot) const;
-	QInt operator/(const QInt& ot) const;
+	QInt operator=(const QInt& ot);
+	QInt operator+(const QInt& ot);
+	QInt operator-(const QInt& ot);
+	QInt operator*(const QInt& ot);
+	QInt operator/(const QInt& ot);
 	QInt twoComplement();
 	QInt abs();
 

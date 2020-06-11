@@ -1,8 +1,9 @@
 #include "QInt.h"
-
+#include <fstream>
 //Hàm khởi tạo QInt không tham số
 QInt::QInt() {
 	memset(bitArr, 0, SIZE);
+	for (int i = 0; i < 128; i++) setBit(i, 0);
 }
 
 //Hàm hủy QInt
@@ -23,11 +24,14 @@ QInt::QInt(string str, string base) {
 	}
 }
 
-//Hàm sao chép QInt
-QInt::QInt(const QInt& other) {
+//Toán tử =
+QInt QInt::operator=(const QInt& ot) 
+{
+	QInt result;
 	for (int i = SIZE - 1; i >= 0; i--) {
-		bitArr[i] = other.bitArr[i];
+		bitArr[i] = ot.bitArr[i];
 	}
+	return result;
 }
 
 //Thay đổi giá trị bit thứ pos với giá trị 
@@ -102,7 +106,7 @@ void QInt::fromHex(string str) {
 string QInt::div2(string str) {
 	string result;
 	char remainder = 0;
-	for (int i = 0; i < str.size(); i++) {
+	for (int i = 0; i < str.length(); i++) {
 		char d = str[i] - '0';
 		result += ((d / 2 + remainder) + '0');
 		remainder = (d % 2) * 5;
@@ -114,7 +118,7 @@ string QInt::div2(string str) {
 
 //Phép cộng 2 số (*this + ot)
 
-QInt QInt::operator+(const QInt& ot) const{
+QInt QInt::operator+(const QInt& ot){
 	QInt b = ot;
 	QInt a = *this;
 	QInt result;
@@ -142,25 +146,28 @@ QInt QInt::twoComplement() {
 
 //Phép trừ 2 số (*this - ot)
 
-QInt QInt::operator-(const QInt& ot) const{
+QInt QInt::operator-(const QInt& ot){
 	QInt b = ot;
 	return *this + b.twoComplement();
 }
 
 //Phép nhân 2 số (*this * ot)
 
-QInt QInt::operator*(const QInt& ot) const{
+QInt QInt::operator*(const QInt& ot){
 	QInt a;
 	QInt m = *this;
 	QInt q0 = ot;
 	char q1 = 0;
 	const int sizeInBits = SIZE * 8;
 	for (int k = sizeInBits; k > 0; --k) {
-
+		//cout << q0.toDec() << endl;
+		//cout << a.toDec() << endl;
+		//cout << (int)q1 << endl;
+		//cout << endl;
 		if ((q0.getBit(sizeInBits - 1) & 1) & (q1 ^ 1)) a = a - m;
 		else if ((q0.getBit(sizeInBits - 1) ^ 1) & (q1 & 1)) a = a + m;
 
-		q1 = q0.getBit(sizeInBits - 1);
+		q1 = q0.getBit(sizeInBits - 1) & 1;
 		for (int i = sizeInBits - 1; i > 0; --i) {
 			q0.setBit(i, q0.getBit(i - 1));
 		}
@@ -168,13 +175,14 @@ QInt QInt::operator*(const QInt& ot) const{
 		for (int i = sizeInBits - 1; i > 0; --i) {
 			a.setBit(i, a.getBit(i - 1));
 		}
+
 	}
 	return q0;
 }
 
 //Phép chia 2 số (*t)
 
-QInt QInt::operator/(const QInt& ot) const{
+QInt QInt::operator/(const QInt& ot){
 	QInt m = ot;
 	QInt a;
 	QInt q0 = *this;
@@ -278,10 +286,11 @@ QInt QInt::operator<<(int num) const {
 //Tính giá trị tuyệt đối
 
 QInt QInt::abs() {
+	QInt result = *this;
 	if (getBit(0)) {
-		return twoComplement();
+		return result.twoComplement();
 	}
-	return *this;
+	return result;
 }
 
 //Phép xoay trái
@@ -329,11 +338,11 @@ string QInt::mul2(string a, char x) {
 //Chuyển từ QInt sang hệ 10
 
 string QInt::toDec() {
-
+	QInt tmp = *this;
 	bool isNegative = false;
-	int bit = (bitArr[0] >> 7) & 1;
+ 	int bit = (bitArr[0] >> 7) & 1;
 	if (bit == 1) {
-		*this = twoComplement();
+		tmp = tmp.twoComplement();
 		isNegative = true;
 	}
 
@@ -341,7 +350,7 @@ string QInt::toDec() {
 
 
 	for (int i = 0; i < SIZE * 8; i++) {
-		char c = getBit(i);
+		char c = tmp.getBit(i);
 
 		result = mul2(result, c);
 	}
