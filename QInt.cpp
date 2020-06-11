@@ -3,7 +3,6 @@
 //Hàm khởi tạo QInt không tham số
 QInt::QInt() {
 	memset(bitArr, 0, SIZE);
-	for (int i = 0; i < 128; i++) setBit(i, 0);
 }
 
 //Hàm hủy QInt
@@ -38,17 +37,17 @@ QInt QInt::operator=(const QInt& ot)
 
 void QInt::setBit(int pos, char val) {
 	if (val) {
-		bitArr[pos / 8] |= (1 << (7 - pos % 8));
+		bitArr[pos / 8] |= (1 << (pos % 8));
 	}
 	else {
-		bitArr[pos / 8] &= (~(1 << (7 - pos % 8)));
+		bitArr[pos / 8] &= (~(1 << (pos % 8)));
 	}
 }
 
 //Lấy giá trị bit thứ pos
 
 char QInt::getBit(int pos) {
-	return (bitArr[pos / 8] >> (7 - pos % 8)) & 1;
+	return (bitArr[pos / 8] >> (pos % 8)) & 1;
 }
 
 
@@ -58,8 +57,7 @@ void QInt::fromBin(string str) {
 	memset(bitArr, 0, SIZE);
 	for (int i = str.size() - 1; i >= 0; --i) {
 		int pos = SIZE * 8 - (str.size() - i);
-		if (str[i] == '0') setBit(pos, 0);
-		else setBit(pos, 1);
+		setBit(pos, str[i] - '0');
 	}
 }
 
@@ -91,7 +89,7 @@ void QInt::fromHex(string str) {
 	char he;
 	for (int i = str.size() - 1; i >= 0; --i) {
 		int pos = SIZE * 8 - (str.size() - i) * 4;
-		char he = 0;
+		he = 0;
 		if (str[i] < 'A') he = str[i] - '0';
 		else he = str[i] - 55;//'A' = 65
 		setBit(pos, (he >> 3) & 1);
@@ -106,7 +104,7 @@ void QInt::fromHex(string str) {
 string QInt::div2(string str) {
 	string result;
 	char remainder = 0;
-	for (int i = 0; i < str.length(); i++) {
+	for (int i = 0; i < str.size(); i++) {
 		char d = str[i] - '0';
 		result += ((d / 2 + remainder) + '0');
 		remainder = (d % 2) * 5;
@@ -160,10 +158,7 @@ QInt QInt::operator*(const QInt& ot){
 	char q1 = 0;
 	const int sizeInBits = SIZE * 8;
 	for (int k = sizeInBits; k > 0; --k) {
-		//cout << q0.toDec() << endl;
-		//cout << a.toDec() << endl;
-		//cout << (int)q1 << endl;
-		//cout << endl;
+
 		if ((q0.getBit(sizeInBits - 1) & 1) & (q1 ^ 1)) a = a - m;
 		else if ((q0.getBit(sizeInBits - 1) ^ 1) & (q1 & 1)) a = a + m;
 
@@ -256,8 +251,9 @@ QInt QInt::operator~() const {
 QInt QInt::operator>>(int num) const {
 	QInt result = *this;
 	char saved = result.getBit(0);
+	num = num % (SIZE * 8);
 
-	for (int i = 127; i >= num; --i) {
+	for (int i = SIZE*8 - 1; i >= num; --i) {
 		result.setBit(i, result.getBit(i - num));
 	}
 	for (int i = 0; i < num; i++) {
@@ -270,15 +266,13 @@ QInt QInt::operator>>(int num) const {
 
 QInt QInt::operator<<(int num) const {
 	QInt result = *this;
-	while (num > 0) {
-		for (int i = 0; i < SIZE - 1; i++) {
-			result.bitArr[i] = result.bitArr[i] << 1;
-			if ((result.bitArr[i + 1] >> 7) & 1) {
-				result.bitArr[i] = (1 | result.bitArr[i]);
-			}
-		}
-		result.bitArr[SIZE - 1] = result.bitArr[SIZE - 1] << 1;
-		num--;
+	num = num % (SIZE * 8);
+	int n = 128 - num;
+	for (int i = 0; i < n; ++i) {
+		result.setBit(i, result.getBit(i + num));
+	}
+	for (int i = n; i < SIZE*8; i++) {
+		result.setBit(i, 0);
 	}
 	return result;
 }
@@ -340,8 +334,8 @@ string QInt::mul2(string a, char x) {
 string QInt::toDec() {
 	QInt tmp = *this;
 	bool isNegative = false;
- 	int bit = (bitArr[0] >> 7) & 1;
-	if (bit == 1) {
+ 	char bit = getBit(0);
+	if (bit) {
 		tmp = tmp.twoComplement();
 		isNegative = true;
 	}
@@ -351,7 +345,6 @@ string QInt::toDec() {
 
 	for (int i = 0; i < SIZE * 8; i++) {
 		char c = tmp.getBit(i);
-
 		result = mul2(result, c);
 	}
 

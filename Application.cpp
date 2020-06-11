@@ -104,7 +104,6 @@ void Application::solve(string req) {
 			else if (p3 == "^") result = a ^ b;
 			else if (p3 == "|") result = a | b;
 			else if (p3 == "&") result = a & b;
-			cout << p2 << endl << p3 << endl << p4 << endl;
 			writeLine(result.toString(p1));
 
 		}
@@ -124,7 +123,6 @@ void Application::start() {
 
 	while (!req.empty()) {
 		solve(req);
-		cout << req << endl;
 		req = readLine();
 	}
 }
